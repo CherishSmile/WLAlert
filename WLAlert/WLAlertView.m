@@ -2,7 +2,7 @@
 //  WLAlertView.m
 //  WLAlertView
 //
-//  Created by Mzywx on 16/3/15.
+//  Created by MWLwx on 16/3/15.
 //  Copyright © 2016年 Mzywx. All rights reserved.
 //
 
@@ -13,8 +13,8 @@
 #import "WLAlertVC.h"
 
 
-const UIWindowLevel UIWindowLevelSIAlert = 1996.0;  // don't overlap system's alert
-const UIWindowLevel UIWindowLevelSIAlertBackground = 1985.0; // below the alert window
+const UIWindowLevel UIWindowLevelSIAlert = 1996.0;  // 不要和系统的leve了一样
+const UIWindowLevel UIWindowLevelSIAlertBackground = 1985.0; // 在alert Window的下面
 
 NSString *const WLAlertViewWillShowNotification = @"WLAlertViewWillShowNotification";
 NSString *const WLAlertViewDidShowNotification = @"WLAlertViewDidShowNotification";
@@ -201,7 +201,7 @@ static WLAlertView *__nt_alert_current_view;
                                  }
                              }];
         }
-        break;
+            break;
         case WLAlertViewTransitionStyleSlideFromTop:
         {
             CGRect rect = self.containerView.frame;
@@ -218,7 +218,7 @@ static WLAlertView *__nt_alert_current_view;
                                  }
                              }];
         }
-        break;
+            break;
         case WLAlertViewTransitionStyleFade:
         {
             self.containerView.alpha = 0;
@@ -232,7 +232,7 @@ static WLAlertView *__nt_alert_current_view;
                                  }
                              }];
         }
-        break;
+            break;
         case WLAlertViewTransitionStyleBounce:
         {
             CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
@@ -240,11 +240,11 @@ static WLAlertView *__nt_alert_current_view;
             animation.keyTimes = @[@(0), @(0.4), @(0.6), @(1)];
             animation.timingFunctions = @[[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear], [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear], [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
             animation.duration = 0.5;
-            animation.delegate = self;
+            animation.delegate = (id)self;
             [animation setValue:completion forKey:@"handler"];
-            [self.containerView.layer addAnimation:animation forKey:@"bouce"];
+            [self.containerView.layer addAnimation:animation forKey:@"bounce"];
         }
-        break;
+            break;
         case WLAlertViewTransitionStyleDropDown:
         {
             CGFloat y = self.containerView.center.y;
@@ -253,13 +253,13 @@ static WLAlertView *__nt_alert_current_view;
             animation.keyTimes = @[@(0), @(0.5), @(0.75), @(1)];
             animation.timingFunctions = @[[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut], [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear], [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
             animation.duration = 0.4;
-            animation.delegate = self;
+            animation.delegate = (id)self;
             [animation setValue:completion forKey:@"handler"];
             [self.containerView.layer addAnimation:animation forKey:@"dropdown"];
         }
-        break;
+            break;
         default:
-        break;
+            break;
     }
 }
 
@@ -282,7 +282,7 @@ static WLAlertView *__nt_alert_current_view;
                                  }
                              }];
         }
-        break;
+            break;
         case WLAlertViewTransitionStyleSlideFromTop:
         {
             CGRect rect = self.containerView.frame;
@@ -299,7 +299,7 @@ static WLAlertView *__nt_alert_current_view;
                                  }
                              }];
         }
-        break;
+            break;
         case WLAlertViewTransitionStyleFade:
         {
             [UIView animateWithDuration:0.25
@@ -312,21 +312,27 @@ static WLAlertView *__nt_alert_current_view;
                                  }
                              }];
         }
-        break;
+            break;
         case WLAlertViewTransitionStyleBounce:
         {
-            CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
-            animation.values = @[@(1), @(1.2), @(0.01)];
-            animation.keyTimes = @[@(0), @(0.4), @(1)];
-            animation.timingFunctions = @[[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut], [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
-            animation.duration = 0.35;
-            animation.delegate = self;
-            [animation setValue:completion forKey:@"handler"];
-            [self.containerView.layer addAnimation:animation forKey:@"bounce"];
+            CGPoint point = self.containerView.center;
+            point.y += self.bounds.size.height;
+            [UIView animateWithDuration:0.3
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseIn
+                             animations:^{
+                                 self.containerView.center = point;
+                                 CGFloat angle = ((CGFloat)arc4random_uniform(100) - 50.f) / 100.f;
+                                 self.containerView.transform = CGAffineTransformMakeRotation(angle);
+                             }
+                             completion:^(BOOL finished) {
+                                 if (completion) {
+                                     completion();
+                                 }
+                             }];
             
-            self.containerView.transform = CGAffineTransformMakeScale(0.01, 0.01);
         }
-        break;
+            break;
         case WLAlertViewTransitionStyleDropDown:
         {
             CGPoint point = self.containerView.center;
@@ -345,9 +351,9 @@ static WLAlertView *__nt_alert_current_view;
                                  }
                              }];
         }
-        break;
+            break;
         default:
-        break;
+            break;
     }
 }
 
@@ -365,7 +371,9 @@ static WLAlertView *__nt_alert_current_view;
         self.oldKeyWindow.tintAdjustmentMode = UIViewTintAdjustmentModeDimmed;
     }
 #endif
-    
+    if ([WLAlertView sharedQueue].count) {
+        return;
+    }
     if (![[WLAlertView sharedQueue] containsObject:self]) {
         [[WLAlertView sharedQueue] addObject:self];
     }
