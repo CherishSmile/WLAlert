@@ -7,9 +7,6 @@
 //
 
 
-
-
-
 #import <UIKit/UIKit.h>
 
 @class WLAlertView;
@@ -54,7 +51,9 @@ typedef NS_ENUM(NSInteger,WLAlertViewTransitionStyle) {
 @property (nonatomic, assign) BOOL isTouchOtherUndissmiss;
 
 @property (nonatomic, assign, getter = isVisible) BOOL visible;
+
 @property (nonatomic, readonly, getter = isParallaxEffectEnabled) BOOL enabledParallaxEffect;
+
 @property (nonatomic, assign, getter = isLayoutDirty) BOOL layoutDirty;
 
 /**

@@ -10,8 +10,4 @@
 
 @interface UIWindow (WLUitily)
 - (UIViewController *)currentViewController;
-#ifdef __IPHONE_7_0
-- (UIViewController *)viewControllerForStatusBarStyle;
-- (UIViewController *)viewControllerForStatusBarHidden;
-#endif
 @end

@@ -3,7 +3,7 @@
 //  WLAlertView
 //
 //  Created by MWLwx on 16/3/15.
-//  Copyright © 2016年 Mzywx. All rights reserved.
+//  Copyright © 2016年 MWLwx. All rights reserved.
 //
 
 
@@ -27,9 +27,7 @@ static WLAlertWindow *__nt_alert_background_window;
 static WLAlertView *__nt_alert_current_view;
 
 @interface WLAlertView()
-#ifdef __IPHONE_7_0
-@property (nonatomic, assign) UIViewTintAdjustmentMode oldTintAdjustmentMode;
-#endif
+
 + (NSMutableArray *)sharedQueue;
 + (WLAlertView *)currentAlertView;
 
@@ -130,35 +128,6 @@ static WLAlertView *__nt_alert_current_view;
     
 }
 
-# pragma mark -
-# pragma mark Enable parallax effect (iOS7 only)
-
-#ifdef __IPHONE_7_0
-- (void)addParallaxEffect
-{
-    if (_enabledParallaxEffect && NSClassFromString(@"UIInterpolatingMotionEffect"))
-    {
-        UIInterpolatingMotionEffect *effectHorizontal = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"position.x" type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-        UIInterpolatingMotionEffect *effectVertical = [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"position.y" type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-        [effectHorizontal setMaximumRelativeValue:@(20.0f)];
-        [effectHorizontal setMinimumRelativeValue:@(-20.0f)];
-        [effectVertical setMaximumRelativeValue:@(50.0f)];
-        [effectVertical setMinimumRelativeValue:@(-50.0f)];
-        [self.containerView addMotionEffect:effectHorizontal];
-        [self.containerView addMotionEffect:effectVertical];
-    }
-}
-
-- (void)removeParallaxEffect
-{
-    if (_enabledParallaxEffect && NSClassFromString(@"UIInterpolatingMotionEffect"))
-    {
-        [self.containerView.motionEffects enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            [self.containerView removeMotionEffect:obj];
-        }];
-    }
-}
-#endif
 -(void)setContainerView:(UIView *)containerView
 {
     if (_containerView) {
@@ -365,12 +334,7 @@ static WLAlertView *__nt_alert_current_view;
     }
     
     self.oldKeyWindow = [[UIApplication sharedApplication] keyWindow];
-#ifdef __IPHONE_7_0
-    if ([self.oldKeyWindow respondsToSelector:@selector(setTintAdjustmentMode:)]) { // for iOS 7
-        self.oldTintAdjustmentMode = self.oldKeyWindow.tintAdjustmentMode;
-        self.oldKeyWindow.tintAdjustmentMode = UIViewTintAdjustmentModeDimmed;
-    }
-#endif
+    
     if ([WLAlertView sharedQueue].count) {
         return;
     }
@@ -421,9 +385,6 @@ static WLAlertView *__nt_alert_current_view;
             self.didShowHandler(self);
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:WLAlertViewDidShowNotification object:self userInfo:nil];
-#ifdef __IPHONE_7_0
-        [self addParallaxEffect];
-#endif
         
         [WLAlertView setAnimating:NO];
         
@@ -448,9 +409,6 @@ static WLAlertView *__nt_alert_current_view;
             self.willDismissHandler(self);
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:WLAlertViewWillDismissNotification object:self userInfo:nil];
-#ifdef __IPHONE_7_0
-        [self removeParallaxEffect];
-#endif
     }
     
     void (^dismissComplete)(void) = ^{
@@ -512,11 +470,6 @@ static WLAlertView *__nt_alert_current_view;
     }
     
     UIWindow *window = self.oldKeyWindow;
-#ifdef __IPHONE_7_0
-    if ([window respondsToSelector:@selector(setTintAdjustmentMode:)]) {
-        window.tintAdjustmentMode = self.oldTintAdjustmentMode;
-    }
-#endif
     if (!window) {
         window = [UIApplication sharedApplication].windows[0];
     }

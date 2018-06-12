@@ -23,8 +23,6 @@
     return self;
 }
 -(void)creatInit{
-//    [self setSelectedBackgroundView:[[UIImageView alloc] initWithImage:createImg(CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height), [UIColor lightGrayColor])]];
-    
     _titlelbl=[[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCR_WIDTH, CGRectGetHeight(self.frame))];
     _titlelbl.textAlignment = NSTextAlignmentCenter;
     _titlelbl.textColor = [UIColor blackColor];

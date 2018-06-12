@@ -21,20 +21,11 @@
     [super viewDidLoad];
 }
 
-#ifdef __IPHONE_7_0
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-        [self setNeedsStatusBarAppearanceUpdate];
-    }
-}
-#elif __IPHONE_8_0
 -(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator{
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
         [self setNeedsStatusBarAppearanceUpdate];
     }
 }
-#endif
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {
@@ -52,25 +43,5 @@
     }
     return YES;
 }
-
-#ifdef __IPHONE_7_0
-- (UIStatusBarStyle)preferredStatusBarStyle
-{
-    UIWindow *window = self.alertView.oldKeyWindow;
-    if (!window) {
-        window = [UIApplication sharedApplication].windows.firstObject;
-    }
-    return [[window viewControllerForStatusBarStyle] preferredStatusBarStyle];
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    UIWindow *window = self.alertView.oldKeyWindow;
-    if (!window) {
-        window = [UIApplication sharedApplication].windows.firstObject;
-    }
-    return [[window viewControllerForStatusBarHidden] prefersStatusBarHidden];
-}
-#endif
 
 @end

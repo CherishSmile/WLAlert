@@ -17,23 +17,5 @@
     }
     return viewController;
 }
-# ifdef __IPHONE_7_0
--(UIViewController *)viewControllerForStatusBarStyle
-{
-    UIViewController * viewController = [self currentViewController];
-    while ([viewController childViewControllerForStatusBarStyle]) {
-        viewController = [viewController childViewControllerForStatusBarStyle];
-    }
-    return viewController;
-}
--(UIViewController *)viewControllerForStatusBarHidden
-{
-    UIViewController *  viewController = [self currentViewController];
-    while ([viewController childViewControllerForStatusBarHidden]) {
-        viewController = [viewController childViewControllerForStatusBarHidden];
-    }
-    return viewController;
-}
-# endif
 
 @end
